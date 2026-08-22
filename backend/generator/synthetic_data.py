@@ -441,22 +441,25 @@ def generate_synthetic_dataset(
             timestamp=tx_time.isoformat()
         ))
 
-    # Write files to disk
-    with open(os.path.join(output_dir, "oms_orders.json"), "w") as f:
-        json.dump([o.model_dump() if hasattr(o, "model_dump") else o.dict() for o in oms_orders], f, indent=2)
+    # Write files to disk (gracefully skip in read-only serverless environments like Vercel)
+    try:
+        with open(os.path.join(output_dir, "oms_orders.json"), "w", encoding="utf-8") as f:
+            json.dump([o.model_dump() if hasattr(o, "model_dump") else o.dict() for o in oms_orders], f, indent=2)
 
-    with open(os.path.join(output_dir, "gateway_settlements.json"), "w") as f:
-        json.dump([g.model_dump() if hasattr(g, "model_dump") else g.dict() for g in gateway_records], f, indent=2)
+        with open(os.path.join(output_dir, "gateway_settlements.json"), "w", encoding="utf-8") as f:
+            json.dump([g.model_dump() if hasattr(g, "model_dump") else g.dict() for g in gateway_records], f, indent=2)
 
-    with open(os.path.join(output_dir, "bank_statement.csv"), "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["entry_id", "date", "utr", "narration", "credit", "debit", "balance", "channel"])
-        for b in bank_entries:
-            writer.writerow([b.entry_id, b.date, b.utr or "", b.narration, b.credit, b.debit, b.balance, b.channel])
+        with open(os.path.join(output_dir, "bank_statement.csv"), "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["entry_id", "date", "utr", "narration", "credit", "debit", "balance", "channel"])
+            for b in bank_entries:
+                writer.writerow([b.entry_id, b.date, b.utr or "", b.narration, b.credit, b.debit, b.balance, b.channel])
+    except Exception:
+        pass
 
-    print(f"[SyntheticData] Generated {len(oms_orders)} OMS Orders, {len(gateway_records)} Gateway Records, {len(bank_entries)} Bank Statement lines.")
     return oms_orders, gateway_records, bank_entries
 
 
 if __name__ == "__main__":
     generate_synthetic_dataset()
+

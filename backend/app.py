@@ -201,20 +201,54 @@ def export_csv():
     )
 
 
-# Serve frontend static assets
-frontend_dir = os.path.join(os.path.dirname(__file__), "..", "frontend")
-if os.path.exists(frontend_dir):
-    app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
+def find_frontend_file(filename: str) -> Optional[str]:
+    candidates = [
+        os.path.join(os.path.dirname(__file__), "..", "frontend", filename),
+        os.path.join(os.getcwd(), "frontend", filename),
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", filename),
+        os.path.join("/var/task/frontend", filename),
+    ]
+    for p in candidates:
+        if os.path.exists(p):
+            return p
+    return None
 
-    @app.get("/", response_class=HTMLResponse)
-    def index():
-        index_file = os.path.join(frontend_dir, "index.html")
-        if os.path.exists(index_file):
-            with open(index_file, "r", encoding="utf-8") as f:
-                return f.read()
-        return "<h1>LedgerGuard Frontend not found</h1>"
+
+@app.get("/", response_class=HTMLResponse)
+def index():
+    path = find_frontend_file("index.html")
+    if path and os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read()
+    return "<h1>LedgerGuard API Online</h1>"
+
+
+@app.get("/static/style.css")
+def get_css():
+    path = find_frontend_file("style.css")
+    if path and os.path.exists(path):
+        return FileResponse(path, media_type="text/css")
+    return Response(content="", media_type="text/css")
+
+
+@app.get("/static/app.js")
+def get_js():
+    path = find_frontend_file("app.js")
+    if path and os.path.exists(path):
+        return FileResponse(path, media_type="application/javascript")
+    return Response(content="", media_type="application/javascript")
+
+
+# Mount static if directory exists
+try:
+    frontend_dir = os.path.join(os.path.dirname(__file__), "..", "frontend")
+    if os.path.exists(frontend_dir):
+        app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
+except Exception:
+    pass
 
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("backend.app:app", host="0.0.0.0", port=8000, reload=True)
+
