@@ -1,0 +1,1 @@
+from backend.generator.synthetic_data import generate_synthetic_dataset

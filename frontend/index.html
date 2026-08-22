@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LedgerGuard — Autonomous 3-Way Financial Reconciliation Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <header class="top-nav">
+            <div class="brand">
+                <div class="logo-badge">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#3395FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="#3395FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="#3395FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="brand-title">LedgerGuard <span class="badge-track">Track 04: AI Finance Controller</span></div>
+                    <div class="brand-sub">Autonomous 3-Way Financial Reconciliation & Exception Resolver</div>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <div class="status-indicator">
+                    <span class="pulse-dot"></span>
+                    <span class="status-text">Engine Online</span>
+                </div>
+                <button class="btn btn-secondary" id="btn-export-csv">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Export Audit CSV
+                </button>
+                <button class="btn btn-primary" id="btn-re-run">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Run Batch Simulation
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Metrics Row -->
+            <section class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">TOTAL RECONCILED RATE</span>
+                        <span class="metric-tag tag-success">Target >85%</span>
+                    </div>
+                    <div class="metric-value" id="metric-match-rate">--%</div>
+                    <div class="metric-sub" id="metric-match-sub">-- of -- records matched</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">LAYER 1: DETERMINISTIC MATH</span>
+                        <span class="metric-tag tag-blue">0% Hallucination</span>
+                    </div>
+                    <div class="metric-value" id="metric-deterministic-count">--</div>
+                    <div class="metric-sub">Exact 1:1 & Batch 1:N Settlements</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">LAYER 2: AI AUTO-RESOLVED</span>
+                        <span class="metric-tag tag-purple">Structured Output</span>
+                    </div>
+                    <div class="metric-value" id="metric-ai-count">--</div>
+                    <div class="metric-sub">Ghost Webhooks, MDR & Refund Fixes</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">HONEST EXCEPTIONS FLAGGED</span>
+                        <span class="metric-tag tag-warning">Human-in-the-Loop</span>
+                    </div>
+                    <div class="metric-value" id="metric-exceptions-count">--</div>
+                    <div class="metric-sub" id="metric-discrepancy-sum">Rs. -- in dispute/escrow</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">PIPELINE THROUGHPUT</span>
+                        <span class="metric-tag tag-cyan">High Performance</span>
+                    </div>
+                    <div class="metric-value" id="metric-throughput">-- rec/s</div>
+                    <div class="metric-sub" id="metric-time">Execution time: --s</div>
+                </div>
+            </section>
+
+            <!-- 3-Way Pipeline Architecture Visualizer -->
+            <section class="architecture-banner">
+                <div class="banner-title">
+                    <span class="icon">⚡</span> 3-WAY INGESTION & BOUNDED MULTI-LAYER RESOLUTION PIPELINE
+                </div>
+                <div class="pipeline-flow">
+                    <div class="flow-step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-name">Merchant OMS</div>
+                            <div class="step-detail" id="oms-count">120 Orders (Rs. 771.3k)</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow">+</div>
+                    <div class="flow-step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-name">Razorpay Gateway</div>
+                            <div class="step-detail" id="gateway-count">120 Settlements (MDR/GST)</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow">+</div>
+                    <div class="flow-step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-name">Bank Nodal Statement</div>
+                            <div class="step-detail" id="bank-count">74 Statement Lines</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow">➔</div>
+                    <div class="flow-step highlight-step">
+                        <div class="step-num">AI</div>
+                        <div class="step-content">
+                            <div class="step-name">LedgerGuard Core</div>
+                            <div class="step-detail">Deterministic + AI + SHA-256 Proof</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Tabs -->
+            <div class="tabs-container">
+                <button class="tab-btn active" data-tab="all-records">
+                    All Reconciled Records <span class="tab-badge" id="badge-all">0</span>
+                </button>
+                <button class="tab-btn" data-tab="ai-resolutions">
+                    AI Diagnostic Resolutions <span class="tab-badge badge-purple" id="badge-ai">0</span>
+                </button>
+                <button class="tab-btn" data-tab="exceptions">
+                    Honest Exception Queue <span class="tab-badge badge-red" id="badge-exceptions">0</span>
+                </button>
+                <button class="tab-btn" data-tab="audit-chain">
+                    SHA-256 Audit Trail
+                </button>
+            </div>
+
+            <!-- Tab 1: All Records -->
+            <section class="tab-content active" id="tab-all-records">
+                <div class="table-toolbar">
+                    <div class="search-box">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input type="text" id="search-input" placeholder="Search Order ID, Payment ID, UTR...">
+                    </div>
+                    <div class="filter-group">
+                        <select id="filter-match-type">
+                            <option value="">All Match Types</option>
+                            <option value="EXACT_1_TO_1">Exact 1:1 (Layer 1)</option>
+                            <option value="BATCH_1_TO_N">Batch 1:N (Layer 1)</option>
+                            <option value="AI_RESOLVED">AI Resolved (Layer 2)</option>
+                            <option value="FLAGGED_EXCEPTION">Flagged Exception (Layer 3)</option>
+                        </select>
+                        <select id="filter-category">
+                            <option value="">All Categories</option>
+                            <option value="CLEAN_MATCH">Clean Match</option>
+                            <option value="DROPPED_WEBHOOK_GHOST">Dropped Webhook Ghost</option>
+                            <option value="MDR_FEE_VARIANCE">MDR Fee Variance</option>
+                            <option value="PARTIAL_REFUND_OFFSET">Partial Refund</option>
+                            <option value="CHARGEBACK_HOLD">Chargeback Hold</option>
+                            <option value="ORPHAN_BANK_CREDIT">Orphan Bank Credit</option>
+                            <option value="TIMING_SETTLEMENT_DELAY">Timing Delay</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Recon ID</th>
+                                <th>Order / Payment</th>
+                                <th>UTR</th>
+                                <th>Gross Amount</th>
+                                <th>Fee (MDR+GST)</th>
+                                <th>Net Settled</th>
+                                <th>Bank Credited</th>
+                                <th>Match Type</th>
+                                <th>Category</th>
+                                <th>Confidence</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-table-body">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab 2: AI Resolutions -->
+            <section class="tab-content" id="tab-ai-resolutions">
+                <div class="cards-grid" id="ai-cards-container">
+                    <!-- Populated via JS -->
+                </div>
+            </section>
+
+            <!-- Tab 3: Exceptions Queue -->
+            <section class="tab-content" id="tab-exceptions">
+                <div class="exception-banner">
+                    <div>
+                        <h3>Honest Exception Escalation Queue (Human-in-the-Loop)</h3>
+                        <p>These transactions failed automated bounded policies (confidence &lt; 85%, active dispute, or unreferenced offline credit) and require finance controller review.</p>
+                    </div>
+                </div>
+                <div class="cards-grid" id="exception-cards-container">
+                    <!-- Populated via JS -->
+                </div>
+            </section>
+
+            <!-- Tab 4: Audit Chain -->
+            <section class="tab-content" id="tab-audit-chain">
+                <div class="audit-summary-box">
+                    <div>
+                        <div class="audit-title">Cryptographic Hash-Chained Root Checksum</div>
+                        <div class="audit-hash-display" id="root-audit-hash">--</div>
+                    </div>
+                    <button class="btn btn-secondary" id="btn-copy-hash">Copy Root Hash</button>
+                </div>
+                <div class="audit-list" id="audit-list-container">
+                    <!-- Populated via JS -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Record Detail Drawer / Modal -->
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+    <div class="drawer" id="record-drawer">
+        <div class="drawer-header">
+            <h2 id="drawer-recon-id">Reconciliation Details</h2>
+            <button class="drawer-close" id="drawer-close">&times;</button>
+        </div>
+        <div class="drawer-body" id="drawer-body">
+            <!-- Dynamic Drawer Content -->
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
